@@ -1,0 +1,39 @@
+version: '3.8' # optional
+
+services:
+  frontend:
+    image: docker-compose-frontend
+    build: ./frontend
+    ports:
+      - 3000:3000
+    restart: on-failure
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/frontend
+
+  backend:
+    image: docker-compose-backend
+    build: ./backend
+    ports:
+      - 8000:8000
+    restart: on-failure
+    volumes:
+      # - ./backend/db.sqlite3:/backend/db.sqlite3
+      - ./backend:/backend
+    depends_on:
+      - db
+
+  
+  db:
+    image: postgres:13-alpine
+    environment:
+      - POSTGRES_USER=umit
+      - POSTGRES_PASSWORD=umit123456
+      - POSTGRES_DB=docker_django_umit
+    volumes:
+      - pg_data:/var/lib/postgresql/data/
+
+volumes:
+  pg_data:
+
